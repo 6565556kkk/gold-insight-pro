@@ -297,6 +297,89 @@ export default function DashboardPage() {
             )}
           </div>
 
+          {/* ── Market Overview ── */}
+          <div className="card-premium p-0 mb-6 overflow-hidden">
+            {/* Top row: Key Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 divide-x divide-y lg:divide-y-0 divide-border border-b border-border">
+              {[
+                { label: "Previous Close", value: "$2,340.10" },
+                { label: "Open", value: "$2,340.10" },
+                { label: "Day's Range", value: "$2,332.80 – $2,355.40" },
+                { label: "52 Week Range", value: "$1,984.20 – $2,355.40" },
+                { label: "Volume", value: "182,340" },
+                { label: "Avg. Volume", value: "168,520" },
+                { label: "Market Sentiment", value: "Bullish" },
+                { label: "USD Trend", value: "Weakening" },
+              ].map((item) => (
+                <div key={item.label} className="px-4 py-3">
+                  <p className="text-[11px] text-muted-foreground uppercase tracking-wide leading-tight">
+                    {item.label}
+                  </p>
+                  <p className="text-sm font-semibold mt-0.5 text-foreground">
+                    {item.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom row: Overview Card */}
+            <div className="p-6 flex flex-col lg:flex-row gap-6">
+              <div className="flex-1">
+                <h3 className="font-display font-semibold text-base mb-2 text-foreground">
+                  Gold Market Overview
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Gold prices remain elevated near record highs as persistent
+                  inflation concerns and geopolitical uncertainty continue to
+                  support safe-haven demand. The weakening US dollar has provided
+                  additional tailwinds, while central bank purchases — led by
+                  China, India, and Turkey — have reached multi-decade highs. Despite
+                  rising bond yields acting as a headwind, the net effect of
+                  macro drivers remains decisively bullish for the precious metal
+                  heading into Q2 2025.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-x-8 gap-y-4 shrink-0">
+                {[
+                  {
+                    label: "Inflation Outlook",
+                    value: "Elevated",
+                    sub: "CPI 3.1% YoY",
+                    color: "text-amber-600",
+                  },
+                  {
+                    label: "Bond Yield Trend",
+                    value: "Rising",
+                    sub: "10Y at 4.28%",
+                    color: "text-red-500",
+                  },
+                  {
+                    label: "Central Bank Demand",
+                    value: "Strong",
+                    sub: "1,037t in 2024",
+                    color: "text-green-600",
+                  },
+                  {
+                    label: "Safe-Haven Demand",
+                    value: "Elevated",
+                    sub: "Geopolitical risk ↑",
+                    color: "text-green-600",
+                  },
+                ].map((item) => (
+                  <div key={item.label}>
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wide">
+                      {item.label}
+                    </p>
+                    <p className={`text-sm font-semibold mt-0.5 ${item.color}`}>
+                      {item.value}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{item.sub}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {/* ── Market Insight ── */}
           <div className="card-premium p-6">
             <div className="flex items-start gap-3">
