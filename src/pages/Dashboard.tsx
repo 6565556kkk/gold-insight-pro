@@ -5,7 +5,7 @@ import {
   TrendingDown,
   Minus,
   Shield,
-  ChevronDown,
+  } from "lucide-react";
   BarChart3,
 } from "lucide-react";
 import {
