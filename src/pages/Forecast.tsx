@@ -37,12 +37,12 @@ export default function ForecastPage() {
 
   // Filter SHAP drivers based on selected variables
   const variableToDriverMap: Record<string, string> = {
-    interest: "US Interest Rates",
-    sp500: "US Dollar Index",
-    inflation: "Inflation Expectations",
-    bond10y: "Geopolitical Risk",
-    silver: "Central Bank Buying",
-    copper: "Oil Prices",
+    sp500: "S&P 500 Index",
+    inflation: "Inflation Rate",
+    interest: "Interest Rates",
+    bond10y: "10-Year Gov Bond Yield",
+    silver: "Silver Prices",
+    copper: "Copper Prices",
   };
 
   const filteredDrivers = useMemo(() => {
