@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, Cell, ReferenceLine } from "recharts";
 import { MOCK_SHAP_DRIVERS, MOCK_FORECAST_CONFIGS } from "@/lib/mockData";
+import { SHAP_INTRO_TEXTS, SHAP_TAKEAWAY_TEXTS } from "@/lib/shapTexts";
 import { Info, TrendingUp, TrendingDown, SlidersHorizontal } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
