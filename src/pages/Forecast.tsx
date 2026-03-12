@@ -240,7 +240,7 @@ export default function ForecastPage() {
           {/* Narrative */}
           <div className="rounded-xl bg-muted/50 border border-border p-5">
             <p className="text-sm text-foreground leading-relaxed">
-              <span className="font-semibold">Key takeaway:</span> {config.takeaway}
+              <span className="font-semibold">Key takeaway:</span> {takeawayText}
             </p>
           </div>
         </div>
