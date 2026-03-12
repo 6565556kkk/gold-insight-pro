@@ -55,6 +55,18 @@ export default function ForecastPage() {
     .map((d) => ({ name: d.factor, value: d.impact }))
     .sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
 
+  // Stable index based on selected vars + horizon
+  const textSeed = useMemo(() => {
+    const key = [...selectedVars].sort().join(",") + horizon;
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash = (hash * 31 + key.charCodeAt(i)) | 0;
+    }
+    return Math.abs(hash);
+  }, [selectedVars, horizon]);
+
+  const introText = SHAP_INTRO_TEXTS[textSeed % SHAP_INTRO_TEXTS.length];
+  const takeawayText = SHAP_TAKEAWAY_TEXTS[textSeed % SHAP_TAKEAWAY_TEXTS.length];
   return (
     <div className="container py-8">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
