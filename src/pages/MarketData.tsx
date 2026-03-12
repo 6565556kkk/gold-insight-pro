@@ -32,12 +32,38 @@ export default function MarketDataPage() {
   }, [chartData]);
 
   const tickInterval = useMemo(() => {
-    const len = chartData.length;
-    if (len <= 10) return 0;
-    if (len <= 30) return 3;
-    if (len <= 60) return 7;
-    return Math.floor(len / 10);
-  }, [chartData]);
+    switch (activeRange) {
+      case "1D":
+        return 2;
+      case "5D":
+        return 0;
+      case "1M":
+        return 4;
+      case "6M":
+        return 0;
+      case "YTD":
+        return 0;
+      case "1Y":
+        return 0;
+      case "5Y":
+        return 0;
+      case "All":
+        return 0;
+      default:
+        return 0;
+    }
+  }, [activeRange]);
+
+  const rangeLabelMap: Record<string, string> = {
+    "1D": "Time",
+    "5D": "Date",
+    "1M": "Date",
+    "6M": "Month",
+    "YTD": "Month",
+    "1Y": "Month",
+    "5Y": "Year",
+    "All": "Year",
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -54,7 +80,6 @@ export default function MarketDataPage() {
           </p>
         </motion.div>
 
-        {/* Chart */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -90,7 +115,6 @@ export default function MarketDataPage() {
               </div>
             </div>
 
-            {/* Range buttons */}
             <div className="mt-5 flex flex-wrap gap-2 rounded-xl bg-muted p-2 w-fit">
               {RANGE_LABELS.map((range) => (
                 <Button
@@ -140,6 +164,9 @@ export default function MarketDataPage() {
                     })}`,
                     "Price",
                   ]}
+                  labelFormatter={(label) =>
+                    `${rangeLabelMap[activeRange]}: ${label}`
+                  }
                   labelStyle={{ fontWeight: 600 }}
                 />
                 <Line
@@ -155,7 +182,6 @@ export default function MarketDataPage() {
           </div>
         </motion.div>
 
-        {/* Table */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
