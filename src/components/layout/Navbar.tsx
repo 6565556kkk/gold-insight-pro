@@ -31,6 +31,7 @@ export default function Navbar() {
     { to: "/dashboard", label: "Dashboard" },
     { to: "/market", label: "Market Data" },
     { to: "/forecast", label: "Forecast" },
+    { to: "/explainability", label: "SHAP" },
   ];
 
   const links = isAuthenticated ? authLinks : guestLinks;
