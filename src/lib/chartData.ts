@@ -6,7 +6,7 @@ type ChartPoint = {
 
 export const RANGE_LABELS = ["1D", "5D", "1M", "6M", "YTD", "1Y", "5Y", "All"];
 
-function formatDate(date: Date, mode: "hour" | "day" | "month" | "year") {
+function formatDate(date: Date, mode: "hour" | "day") {
   if (mode === "hour") {
     return date.toLocaleTimeString("en-US", {
       hour: "2-digit",
@@ -15,21 +15,10 @@ function formatDate(date: Date, mode: "hour" | "day" | "month" | "year") {
     });
   }
 
-  if (mode === "day") {
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-  }
-
-  if (mode === "month") {
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      year: "2-digit",
-    });
-  }
-
-  return date.getFullYear().toString();
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 function generateSeries(count: number, base: number, step: number): number[] {
@@ -77,11 +66,12 @@ function buildMonthlyData(months: number): ChartPoint[] {
   const prices = generateSeries(months, 1900, 35);
 
   return Array.from({ length: months }, (_, i) => {
-    const d = new Date(now);
-    d.setMonth(now.getMonth() - (months - 1 - i));
+    const d = new Date(now.getFullYear(), now.getMonth() - (months - 1 - i), 1);
 
     return {
-      time: formatDate(d, "month"),
+      time: d.toLocaleDateString("en-US", {
+        month: "short",
+      }),
       price: prices[i],
       volume: 9000 + i * 200,
     };
@@ -126,14 +116,19 @@ function buildYTDData(): ChartPoint[] {
 function buildAllDataFrom2015To2025(): ChartPoint[] {
   const startYear = 2015;
   const endYear = 2025;
-  const years = endYear - startYear + 1;
-  const prices = generateSeries(years, 1080, 115);
+  const segmentCount = endYear - startYear;
+  const prices = generateSeries(segmentCount, 1080, 115);
 
-  return Array.from({ length: years }, (_, i) => ({
-    time: String(startYear + i),
-    price: prices[i],
-    volume: 25000 + i * 1200,
-  }));
+  return Array.from({ length: segmentCount }, (_, i) => {
+    const yearStart = startYear + i;
+    const yearEnd = yearStart + 1;
+
+    return {
+      time: `${yearStart}-${yearEnd}`,
+      price: prices[i],
+      volume: 25000 + i * 1200,
+    };
+  });
 }
 
 export const RANGE_DATA: Record<string, ChartPoint[]> = {
