@@ -187,7 +187,7 @@ export default function ForecastPage() {
             <h2 className="font-display text-xl font-bold">Why This Forecast?</h2>
           </div>
           <p className="text-sm text-muted-foreground mb-6">
-            The chart below shows how your selected market factors influenced the latest price forecast. Positive values push the prediction higher, while negative values pull it lower.
+            {introText}
           </p>
 
           {shapChartData.length > 0 ? (
