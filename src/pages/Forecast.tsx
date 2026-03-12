@@ -28,7 +28,7 @@ export default function ForecastPage() {
     AVAILABLE_VARIABLES.map((v) => v.id)
   );
 
-  const config = MOCK_FORECAST_CONFIGS[horizon];
+  const baseConfig = MOCK_FORECAST_CONFIGS[horizon];
 
   const toggleVariable = (id: string) => {
     setSelectedVars((prev) =>
@@ -50,6 +50,54 @@ export default function ForecastPage() {
     const activeFactors = selectedVars.map((v) => variableToDriverMap[v]).filter(Boolean);
     return MOCK_SHAP_DRIVERS.filter((d) => activeFactors.includes(d.factor));
   }, [selectedVars]);
+
+  // Price impact per variable (net SHAP-like contribution to forecast)
+  const VARIABLE_PRICE_IMPACT: Record<string, number> = {
+    sp500: -18,
+    inflation: 45,
+    interest: -32,
+    bond10y: -15,
+    silver: 22,
+    copper: 12,
+  };
+
+  // Dynamically adjust forecast based on selected variables
+  const config = useMemo(() => {
+    const allVarIds = AVAILABLE_VARIABLES.map((v) => v.id);
+    const totalImpact = allVarIds.reduce((sum, id) => sum + VARIABLE_PRICE_IMPACT[id], 0);
+    const selectedImpact = selectedVars.reduce((sum, id) => sum + (VARIABLE_PRICE_IMPACT[id] || 0), 0);
+    const delta = selectedImpact - totalImpact; // difference from "all selected" baseline
+
+    const priceFactor = delta * 0.8; // scale impact into dollar terms
+    const predictedPrice = Math.round((baseConfig.predictedPrice + priceFactor) * 100) / 100;
+    const rangeLow = Math.round(baseConfig.rangeLow + priceFactor - Math.abs(delta) * 0.3);
+    const rangeHigh = Math.round(baseConfig.rangeHigh + priceFactor + Math.abs(delta) * 0.3);
+
+    // Confidence drops when fewer variables are used
+    const varRatio = selectedVars.length / allVarIds.length;
+    const confidence = Math.round(baseConfig.confidence * (0.6 + 0.4 * varRatio));
+
+    // Adjust chart data points
+    const chartData = baseConfig.chartData.map((point) => {
+      if (point.price !== null) return point; // actual data stays fixed
+      const shift = priceFactor * ((baseConfig.chartData.indexOf(point)) / baseConfig.chartData.length);
+      return {
+        ...point,
+        forecast: Math.round(point.forecast + shift),
+        upper: point.upper ? Math.round(point.upper + shift + Math.abs(delta) * 0.2) : undefined,
+        lower: point.lower ? Math.round(point.lower + shift - Math.abs(delta) * 0.2) : undefined,
+      };
+    });
+
+    return {
+      ...baseConfig,
+      predictedPrice,
+      confidence,
+      rangeLow,
+      rangeHigh,
+      chartData,
+    };
+  }, [baseConfig, selectedVars, horizon]);
 
   const shapChartData = filteredDrivers
     .map((d) => ({ name: d.factor, value: d.impact }))
