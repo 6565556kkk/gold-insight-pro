@@ -1,71 +1,148 @@
-// Realistic gold price mock data for various time ranges
-
-function generateIntraday(): { time: string; price: number; volume: number }[] {
-  const base = 2347.8;
-  const points: { time: string; price: number; volume: number }[] = [];
-  for (let h = 9; h <= 16; h++) {
-    for (let m = 0; m < 60; m += 5) {
-      const t = `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
-      const noise = (Math.sin(h * 3 + m * 0.1) * 8) + (Math.random() - 0.5) * 6;
-      const price = +(base + noise + (h - 9) * 1.2).toFixed(2);
-      const volume = Math.floor(800 + Math.random() * 1200 + (h === 10 || h === 15 ? 600 : 0));
-      points.push({ time: t, price, volume });
-    }
-  }
-  return points;
-}
-
-function generateDays(count: number, endPrice: number, startOffset: number): { time: string; price: number; volume: number }[] {
-  const points: { time: string; price: number; volume: number }[] = [];
-  const startPrice = endPrice - startOffset;
-  const today = new Date(2025, 1, 28);
-  for (let i = count - 1; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    if (d.getDay() === 0 || d.getDay() === 6) continue;
-    const progress = 1 - i / count;
-    const trend = startPrice + (endPrice - startPrice) * progress;
-    const noise = (Math.sin(i * 0.7) * 12) + (Math.random() - 0.5) * 10;
-    const price = +(trend + noise).toFixed(2);
-    const volume = Math.floor(140000 + Math.random() * 80000);
-    const label = `${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getDate().toString().padStart(2, "0")}`;
-    points.push({ time: label, price, volume });
-  }
-  return points;
-}
-
-function generateMonths(count: number, endPrice: number, startOffset: number): { time: string; price: number; volume: number }[] {
-  const points: { time: string; price: number; volume: number }[] = [];
-  const startPrice = endPrice - startOffset;
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const startDate = new Date(2025, 1, 1);
-  for (let i = count - 1; i >= 0; i--) {
-    const d = new Date(startDate);
-    d.setMonth(d.getMonth() - i);
-    const progress = 1 - i / count;
-    const trend = startPrice + (endPrice - startPrice) * progress;
-    const cycle = Math.sin(i * 0.4) * 25 + Math.cos(i * 0.15) * 15;
-    const price = +(trend + cycle).toFixed(2);
-    const volume = Math.floor(3200000 + Math.random() * 1500000);
-    const label = `${months[d.getMonth()]} ${d.getFullYear().toString().slice(2)}`;
-    points.push({ time: label, price, volume });
-  }
-  return points;
-}
-
-export type ChartPoint = { time: string; price: number; volume: number };
-
-// YTD = Jan 1 2025 to Feb 28 2025 ≈ 2 months of trading days
-// 1Y = 12 months, 5Y = 60 months, All = Jan 2015 to Feb 2025 ≈ 122 months
-export const RANGE_DATA: Record<string, ChartPoint[]> = {
-  "1D": generateIntraday(),
-  "5D": generateDays(5, 2347.8, 18),
-  "1M": generateDays(22, 2347.8, 42),
-  "6M": generateMonths(6, 2347.8, 120),
-  "YTD": generateDays(42, 2347.8, 55),
-  "1Y": generateMonths(12, 2347.8, 200),
-  "5Y": generateMonths(60, 2347.8, 680),
-  "All": generateMonths(122, 2347.8, 1150),
+type ChartPoint = {
+  time: string;
+  price: number;
+  volume?: number;
 };
 
-export const RANGE_LABELS = ["1D", "5D", "1M", "6M", "YTD", "1Y", "5Y", "All"] as const;
+export const RANGE_LABELS = ["1D", "5D", "1M", "6M", "YTD", "1Y", "5Y", "All"];
+
+function formatDate(date: Date, mode: "hour" | "day" | "month" | "year") {
+  if (mode === "hour") {
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  }
+
+  if (mode === "day") {
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+  }
+
+  if (mode === "month") {
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      year: "2-digit",
+    });
+  }
+
+  return date.getFullYear().toString();
+}
+
+function generateSeries(count: number, base: number, step: number): number[] {
+  return Array.from({ length: count }, (_, i) => {
+    const wave = Math.sin(i / 1.5) * step * 0.6;
+    const trend = i * step;
+    return Math.round((base + trend + wave) * 100) / 100;
+  });
+}
+
+function buildHourlyData(hours: number): ChartPoint[] {
+  const now = new Date();
+  const prices = generateSeries(hours, 2340, 1.2);
+
+  return Array.from({ length: hours }, (_, i) => {
+    const d = new Date(now);
+    d.setHours(now.getHours() - (hours - 1 - i));
+
+    return {
+      time: formatDate(d, "hour"),
+      price: prices[i],
+      volume: 1200 + i * 30,
+    };
+  });
+}
+
+function buildDailyData(days: number): ChartPoint[] {
+  const now = new Date();
+  const prices = generateSeries(days, 2280, 6);
+
+  return Array.from({ length: days }, (_, i) => {
+    const d = new Date(now);
+    d.setDate(now.getDate() - (days - 1 - i));
+
+    return {
+      time: formatDate(d, "day"),
+      price: prices[i],
+      volume: 3000 + i * 80,
+    };
+  });
+}
+
+function buildMonthlyData(months: number): ChartPoint[] {
+  const now = new Date();
+  const prices = generateSeries(months, 1900, 35);
+
+  return Array.from({ length: months }, (_, i) => {
+    const d = new Date(now);
+    d.setMonth(now.getMonth() - (months - 1 - i));
+
+    return {
+      time: formatDate(d, "month"),
+      price: prices[i],
+      volume: 9000 + i * 200,
+    };
+  });
+}
+
+function buildYearlyData(years: number): ChartPoint[] {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const prices = generateSeries(years, 1500, 120);
+
+  return Array.from({ length: years }, (_, i) => {
+    const year = currentYear - (years - 1 - i);
+
+    return {
+      time: year.toString(),
+      price: prices[i],
+      volume: 25000 + i * 1000,
+    };
+  });
+}
+
+function buildYTDData(): ChartPoint[] {
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth();
+  const count = currentMonth + 1;
+  const prices = generateSeries(count, 2260, 18);
+
+  return Array.from({ length: count }, (_, i) => {
+    const d = new Date(currentYear, i, 1);
+
+    return {
+      time: d.toLocaleDateString("en-US", {
+        month: "short",
+      }),
+      price: prices[i],
+      volume: 7000 + i * 300,
+    };
+  });
+}
+
+function buildAllDataFrom2015To2025(): ChartPoint[] {
+  const startYear = 2015;
+  const endYear = 2025;
+  const years = endYear - startYear + 1;
+  const prices = generateSeries(years, 1080, 115);
+
+  return Array.from({ length: years }, (_, i) => ({
+    time: String(startYear + i),
+    price: prices[i],
+    volume: 25000 + i * 1200,
+  }));
+}
+
+export const RANGE_DATA: Record<string, ChartPoint[]> = {
+  "1D": buildHourlyData(24),
+  "5D": buildDailyData(5),
+  "1M": buildDailyData(30),
+  "6M": buildMonthlyData(6),
+  "YTD": buildYTDData(),
+  "1Y": buildMonthlyData(12),
+  "5Y": buildYearlyData(5),
+  "All": buildAllDataFrom2015To2025(),
+};
