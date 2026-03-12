@@ -6,7 +6,7 @@ type ChartPoint = {
 
 export const RANGE_LABELS = ["1D", "5D", "1M", "6M", "YTD", "1Y", "5Y", "All"];
 
-function formatDate(date: Date, mode: "hour" | "day") {
+function formatDate(date: Date, mode: "hour" | "day"): string {
   if (mode === "hour") {
     return date.toLocaleTimeString("en-US", {
       hour: "2-digit",
@@ -69,9 +69,7 @@ function buildMonthlyData(months: number): ChartPoint[] {
     const d = new Date(now.getFullYear(), now.getMonth() - (months - 1 - i), 1);
 
     return {
-      time: d.toLocaleDateString("en-US", {
-        month: "short",
-      }),
+      time: d.toLocaleDateString("en-US", { month: "short" }),
       price: prices[i],
       volume: 9000 + i * 200,
     };
@@ -104,9 +102,7 @@ function buildYTDData(): ChartPoint[] {
     const d = new Date(currentYear, i, 1);
 
     return {
-      time: d.toLocaleDateString("en-US", {
-        month: "short",
-      }),
+      time: d.toLocaleDateString("en-US", { month: "short" }),
       price: prices[i],
       volume: 7000 + i * 300,
     };
