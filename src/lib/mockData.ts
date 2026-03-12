@@ -64,12 +64,12 @@ export const MOCK_FORECAST_CONFIGS: Record<string, {
 };
 
 export const MOCK_SHAP_DRIVERS = [
-  { factor: "US Interest Rates", impact: -32, direction: "negative" as const, description: "Rising interest rates typically reduce gold's appeal as a non-yielding asset." },
-  { factor: "US Dollar Index", impact: -18, direction: "negative" as const, description: "A stronger dollar makes gold more expensive for international buyers." },
-  { factor: "Inflation Expectations", impact: 45, direction: "positive" as const, description: "Higher inflation expectations drive investors toward gold as a hedge." },
-  { factor: "Geopolitical Risk", impact: 28, direction: "positive" as const, description: "Increased global uncertainty boosts demand for safe-haven assets." },
-  { factor: "Central Bank Buying", impact: 22, direction: "positive" as const, description: "Sustained central bank purchases support long-term gold demand." },
-  { factor: "Oil Prices", impact: 12, direction: "positive" as const, description: "Rising energy costs contribute to inflationary pressure, benefiting gold." },
+  { factor: "S&P 500 Index", impact: -18, direction: "negative" as const, description: "A rising stock market draws capital away from safe-haven assets like gold." },
+  { factor: "Inflation Rate", impact: 45, direction: "positive" as const, description: "Higher inflation drives investors toward gold as a hedge against purchasing power erosion." },
+  { factor: "Interest Rates", impact: -32, direction: "negative" as const, description: "Rising interest rates reduce gold's appeal as a non-yielding asset." },
+  { factor: "10-Year Gov Bond Yield", impact: -15, direction: "negative" as const, description: "Higher bond yields increase the opportunity cost of holding gold." },
+  { factor: "Silver Prices", impact: 22, direction: "positive" as const, description: "Silver and gold prices tend to move together as precious metal demand shifts." },
+  { factor: "Copper Prices", impact: 12, direction: "positive" as const, description: "Rising copper prices signal industrial growth and inflationary pressure, benefiting gold." },
 ];
 
 export const MOCK_TABLE_DATA = [
