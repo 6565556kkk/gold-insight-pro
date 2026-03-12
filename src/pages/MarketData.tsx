@@ -9,16 +9,20 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { MOCK_TABLE_DATA } from "@/lib/mockData";
 import { Clock, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RANGE_DATA, RANGE_LABELS } from "@/lib/chartData";
+import { HISTORICAL_TABLE_DATA } from "@/lib/mockData";
 
 export default function MarketDataPage() {
   const [activeRange, setActiveRange] = useState("1M");
 
   const chartData = useMemo(() => {
     return RANGE_DATA[activeRange] ?? [];
+  }, [activeRange]);
+
+  const tableData = useMemo(() => {
+    return HISTORICAL_TABLE_DATA[activeRange] ?? [];
   }, [activeRange]);
 
   const priceMin = useMemo(() => {
@@ -188,13 +192,18 @@ export default function MarketDataPage() {
           transition={{ duration: 0.45, delay: 0.1 }}
           className="rounded-2xl border bg-card shadow-sm overflow-hidden"
         >
-          <div className="p-6 border-b">
-            <h2 className="text-xl font-semibold">Historical Data</h2>
+          <div className="p-6 border-b flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Historical Data</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Showing {tableData.length} records for {activeRange}
+              </p>
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="max-h-[520px] overflow-y-auto overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-muted/50 text-left">
+              <thead className="bg-muted/50 text-left sticky top-0 z-10">
                 <tr>
                   <th className="px-6 py-4 font-medium">Date</th>
                   <th className="px-6 py-4 font-medium">Open</th>
@@ -205,9 +214,9 @@ export default function MarketDataPage() {
                 </tr>
               </thead>
               <tbody>
-                {MOCK_TABLE_DATA.map((row, i) => (
+                {tableData.map((row, i) => (
                   <tr key={i} className="border-t">
-                    <td className="px-6 py-4">{row.date}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{row.date}</td>
                     <td className="px-6 py-4">${row.open.toFixed(2)}</td>
                     <td className="px-6 py-4">${row.high.toFixed(2)}</td>
                     <td className="px-6 py-4">${row.low.toFixed(2)}</td>
