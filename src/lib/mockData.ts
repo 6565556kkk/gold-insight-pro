@@ -19,6 +19,50 @@ export const MOCK_FORECAST = [
   { date: "May 2025", price: null, forecast: 2412, upper: 2490, lower: 2334 },
 ];
 
+export const MOCK_FORECAST_CONFIGS: Record<string, {
+  predictedPrice: number;
+  confidence: number;
+  rangeLow: number;
+  rangeHigh: number;
+  horizonLabel: string;
+  summary: string;
+  takeaway: string;
+  chartData: { date: string; price: number | null; forecast: number; upper?: number; lower?: number }[];
+}> = {
+  "1m": {
+    predictedPrice: 2_375.00,
+    confidence: 91,
+    rangeLow: 2_330,
+    rangeHigh: 2_420,
+    horizonLabel: "1-month",
+    summary:
+      "Over the next month, gold is expected to edge higher to an estimated $2,375, supported by near-term inflation data and continued safe-haven demand. Confidence is high at 91%, with a narrow projected band between $2,330 and $2,420.",
+    takeaway:
+      "Short-term momentum remains positive. Inflation expectations and geopolitical tensions are the dominant drivers, while rising bond yields provide mild headwinds.",
+    chartData: [
+      { date: "Feb 2025", price: 2348, forecast: 2348 },
+      { date: "Mar 2025", price: null, forecast: 2375, upper: 2420, lower: 2330 },
+    ],
+  },
+  "3m": {
+    predictedPrice: 2_412.50,
+    confidence: 87,
+    rangeLow: 2_334,
+    rangeHigh: 2_490,
+    horizonLabel: "3-month",
+    summary:
+      "Our analysis indicates gold is likely to appreciate over the next three months, reaching an estimated price of $2,412 by May 2025. This outlook is supported by persistent inflation expectations and strong central bank demand. The forecast confidence remains high at 87%, with a projected price range between $2,334 and $2,490.",
+    takeaway:
+      "Inflation expectations and geopolitical risk had the strongest positive influence on this forecast, while rising interest rates and US dollar strength partially offset the upward momentum. Overall, the bullish factors outweigh the bearish ones, resulting in a positive price outlook.",
+    chartData: [
+      { date: "Feb 2025", price: 2348, forecast: 2348 },
+      { date: "Mar 2025", price: null, forecast: 2375, upper: 2420, lower: 2330 },
+      { date: "Apr 2025", price: null, forecast: 2395, upper: 2455, lower: 2335 },
+      { date: "May 2025", price: null, forecast: 2412, upper: 2490, lower: 2334 },
+    ],
+  },
+};
+
 export const MOCK_SHAP_DRIVERS = [
   { factor: "US Interest Rates", impact: -32, direction: "negative" as const, description: "Rising interest rates typically reduce gold's appeal as a non-yielding asset." },
   { factor: "US Dollar Index", impact: -18, direction: "negative" as const, description: "A stronger dollar makes gold more expensive for international buyers." },
