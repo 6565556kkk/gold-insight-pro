@@ -1,3 +1,21 @@
+export const MOCK_GOLD_PRICE = {
+  current: 2947.8,
+  change: 12.4,
+  changePercent: 0.42,
+  high: 2961.3,
+  low: 2928.6,
+  open: 2935.2,
+};
+
+export const MOCK_HISTORICAL = [
+  { time: "Sep", price: 2580 },
+  { time: "Oct", price: 2635 },
+  { time: "Nov", price: 2710 },
+  { time: "Dec", price: 2788 },
+  { time: "Jan", price: 2855 },
+  { time: "Feb", price: 2925 },
+];
+
 export const MOCK_MARKET_SUMMARY = [
   { label: "Inflation Outlook", value: "Elevated", detail: "CPI 3.1% YoY" },
   { label: "Bond Yield Trend", value: "Rising", detail: "10Y at 4.28%" },
