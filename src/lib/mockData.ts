@@ -43,7 +43,7 @@ export type HistoricalRow = {
 function formatTableDate(
   date: Date,
   mode: "hour" | "day" | "month" | "yearRange"
-) {
+): string {
   if (mode === "hour") {
     return date.toLocaleString("en-US", {
       month: "short",
