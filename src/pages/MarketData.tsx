@@ -17,13 +17,11 @@ import { HISTORICAL_TABLE_DATA } from "@/lib/mockData";
 export default function MarketDataPage() {
   const [activeRange, setActiveRange] = useState("1M");
 
-  const chartData = useMemo(() => {
-    return RANGE_DATA[activeRange] ?? [];
-  }, [activeRange]);
-
-  const tableData = useMemo(() => {
-    return HISTORICAL_TABLE_DATA[activeRange] ?? [];
-  }, [activeRange]);
+  const chartData = useMemo(() => RANGE_DATA[activeRange] ?? [], [activeRange]);
+  const tableData = useMemo(
+    () => HISTORICAL_TABLE_DATA[activeRange] ?? [],
+    [activeRange]
+  );
 
   const priceMin = useMemo(() => {
     const prices = chartData.map((d) => d.price);
