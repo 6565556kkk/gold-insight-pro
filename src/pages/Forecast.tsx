@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, BarChart, Bar, Cell, ReferenceLine } from "recharts";
 import { MOCK_SHAP_DRIVERS, MOCK_FORECAST_CONFIGS } from "@/lib/mockData";
+import { SHAP_INTRO_TEXTS, SHAP_TAKEAWAY_TEXTS } from "@/lib/shapTexts";
 import { Info, TrendingUp, TrendingDown, SlidersHorizontal } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -54,6 +55,18 @@ export default function ForecastPage() {
     .map((d) => ({ name: d.factor, value: d.impact }))
     .sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
 
+  // Stable index based on selected vars + horizon
+  const textSeed = useMemo(() => {
+    const key = [...selectedVars].sort().join(",") + horizon;
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash = (hash * 31 + key.charCodeAt(i)) | 0;
+    }
+    return Math.abs(hash);
+  }, [selectedVars, horizon]);
+
+  const introText = SHAP_INTRO_TEXTS[textSeed % SHAP_INTRO_TEXTS.length];
+  const takeawayText = SHAP_TAKEAWAY_TEXTS[textSeed % SHAP_TAKEAWAY_TEXTS.length];
   return (
     <div className="container py-8">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -174,7 +187,7 @@ export default function ForecastPage() {
             <h2 className="font-display text-xl font-bold">Why This Forecast?</h2>
           </div>
           <p className="text-sm text-muted-foreground mb-6">
-            The chart below shows how your selected market factors influenced the latest price forecast. Positive values push the prediction higher, while negative values pull it lower.
+            {introText}
           </p>
 
           {shapChartData.length > 0 ? (
@@ -227,7 +240,7 @@ export default function ForecastPage() {
           {/* Narrative */}
           <div className="rounded-xl bg-muted/50 border border-border p-5">
             <p className="text-sm text-foreground leading-relaxed">
-              <span className="font-semibold">Key takeaway:</span> {config.takeaway}
+              <span className="font-semibold">Key takeaway:</span> {takeawayText}
             </p>
           </div>
         </div>
