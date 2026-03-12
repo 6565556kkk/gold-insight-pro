@@ -12,6 +12,7 @@ import SignUp from "@/pages/SignUp";
 import Dashboard from "@/pages/Dashboard";
 import MarketData from "@/pages/MarketData";
 import Forecast from "@/pages/Forecast";
+import Explainability from "@/pages/Explainability";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
