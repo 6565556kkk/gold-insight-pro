@@ -182,21 +182,6 @@ export default function DashboardPage() {
                   <BarChart3 className="h-3.5 w-3.5 mr-1" />
                   Volume {showVolume ? "On" : "Off"}
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-xs text-muted-foreground h-8"
-                >
-                  Line
-                  <ChevronDown className="h-3 w-3 ml-0.5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-xs h-8 font-medium"
-                >
-                  Advanced Chart
-                </Button>
               </div>
             </div>
 

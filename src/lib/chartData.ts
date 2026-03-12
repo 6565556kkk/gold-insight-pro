@@ -55,15 +55,17 @@ function generateMonths(count: number, endPrice: number, startOffset: number): {
 
 export type ChartPoint = { time: string; price: number; volume: number };
 
+// YTD = Jan 1 2025 to Feb 28 2025 ≈ 2 months of trading days
+// 1Y = 12 months, 5Y = 60 months, All = Jan 2015 to Feb 2025 ≈ 122 months
 export const RANGE_DATA: Record<string, ChartPoint[]> = {
   "1D": generateIntraday(),
   "5D": generateDays(5, 2347.8, 18),
   "1M": generateDays(22, 2347.8, 42),
   "6M": generateMonths(6, 2347.8, 120),
-  "YTD": generateDays(40, 2347.8, 65),
+  "YTD": generateDays(42, 2347.8, 55),
   "1Y": generateMonths(12, 2347.8, 200),
   "5Y": generateMonths(60, 2347.8, 680),
-  "All": generateMonths(120, 2347.8, 1150),
+  "All": generateMonths(122, 2347.8, 1150),
 };
 
 export const RANGE_LABELS = ["1D", "5D", "1M", "6M", "YTD", "1Y", "5Y", "All"] as const;
